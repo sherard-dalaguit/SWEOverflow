@@ -2,11 +2,12 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import ROUTES from "@/constants/routes";
 import LocalSearch from "@/components/search/LocalSearch";
+import HomeFilter from "@/components/filters/HomeFilter";
 
 const questions = [
   {
     id: 1,
-    title: "How to implement a search feature in Next.js?",
+    title: "How to implement a search feature in JavaScript?",
     content: "I am trying to implement a search feature in my Next.js application. Any suggestions on how to do this effectively?",
   },
   {
@@ -16,7 +17,7 @@ const questions = [
   },
   {
     id: 3,
-    title: "How to optimize performance in a Next.js application?",
+    title: "How to optimize performance in a JavaScript application?",
     content: "I want to improve the performance of my Next.js app. What are some tips and tricks to achieve this?",
   },
 ]
@@ -26,9 +27,13 @@ interface SearchParams {
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
-  const { query } = await searchParams;
+  const { query = "", filter = "" } = await searchParams;
 
-  const filteredQuestions = questions.filter((question) => question.title.toLowerCase().includes(query?.toLowerCase()))
+  const filteredQuestions = questions.filter((question) => {
+    const matchesQuery = question.title.toLowerCase().includes(query.toLowerCase());
+    const matchesFilter = filter ? question.title.toLowerCase().includes(filter.toLowerCase()) : true;
+    return matchesQuery && matchesFilter;
+  })
 
   return (
     <>
@@ -50,7 +55,7 @@ const Home = async ({ searchParams }: SearchParams) => {
         />
       </section>
 
-      HomeFilter
+      <HomeFilter />
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {filteredQuestions.map((question) => (
