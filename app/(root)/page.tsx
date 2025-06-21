@@ -3,22 +3,50 @@ import Link from "next/link";
 import ROUTES from "@/constants/routes";
 import LocalSearch from "@/components/search/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
+import QuestionCard from "@/components/cards/QuestionCard";
 
 const questions = [
   {
-    id: 1,
+    _id: 1,
     title: "How to implement a search feature in JavaScript?",
-    content: "I am trying to implement a search feature in my Next.js application. Any suggestions on how to do this effectively?",
+    description: "I am trying to implement a search feature in my Next.js application. Any suggestions on how to do this effectively?",
+    tags: [
+      { _id: "1", name: "React" },
+      { _id: "2", name: "JavaScript" },
+    ],
+    author: { _id: "1", name: "John Doe", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx0C3PxoGAznAfruqe_A2iUk1PyJbjqWK2cQ&s" },
+    upvotes: 10,
+    answers: 5,
+    views: 100,
+    createdAt: new Date("2021-09-01")
   },
   {
-    id: 2,
+    _id: 2,
     title: "What is the best way to handle state management in React?",
-    content: "I am looking for the best practices for state management in React applications. Should I use Redux, Context API, or something else?",
+    description: "I am looking for the best practices for state management in React applications. Should I use Redux, Context API, or something else?",
+    tags: [
+      { _id: "1", name: "React" },
+      { _id: "2", name: "JavaScript" },
+    ],
+    author: { _id: "1", name: "John Doe", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx0C3PxoGAznAfruqe_A2iUk1PyJbjqWK2cQ&s" },
+    upvotes: 10,
+    answers: 5,
+    views: 100,
+    createdAt: new Date("2021-09-01")
   },
   {
-    id: 3,
+    _id: 3,
     title: "How to optimize performance in a JavaScript application?",
-    content: "I want to improve the performance of my Next.js app. What are some tips and tricks to achieve this?",
+    description: "I want to improve the performance of my Next.js app. What are some tips and tricks to achieve this?",
+    tags: [
+      { _id: "1", name: "React" },
+      { _id: "2", name: "JavaScript" },
+    ],
+    author: { _id: "1", name: "John Doe", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx0C3PxoGAznAfruqe_A2iUk1PyJbjqWK2cQ&s" },
+    upvotes: 10,
+    answers: 5,
+    views: 100,
+    createdAt: new Date("2021-09-01")
   },
 ]
 
@@ -59,7 +87,7 @@ const Home = async ({ searchParams }: SearchParams) => {
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {filteredQuestions.map((question) => (
-          <h1 key={question.id}>{question.title}</h1>
+          <QuestionCard key={question._id} question={question} />
         ))}
       </div>
     </>
