@@ -7,7 +7,7 @@ import QuestionCard from "@/components/cards/QuestionCard";
 
 const questions = [
   {
-    _id: 1,
+    _id: "1",
     title: "How to implement a search feature in JavaScript?",
     description: "I am trying to implement a search feature in my Next.js application. Any suggestions on how to do this effectively?",
     tags: [
@@ -21,7 +21,7 @@ const questions = [
     createdAt: new Date("2021-09-01")
   },
   {
-    _id: 2,
+    _id: "2",
     title: "What is the best way to handle state management in React?",
     description: "I am looking for the best practices for state management in React applications. Should I use Redux, Context API, or something else?",
     tags: [
@@ -35,7 +35,7 @@ const questions = [
     createdAt: new Date("2021-09-01")
   },
   {
-    _id: 3,
+    _id: "3",
     title: "How to optimize performance in a JavaScript application?",
     description: "I want to improve the performance of my Next.js app. What are some tips and tricks to achieve this?",
     tags: [
