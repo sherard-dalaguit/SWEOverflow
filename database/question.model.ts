@@ -1,4 +1,4 @@
-import { model, models, Schema, Types } from "mongoose";
+import { model, models, Schema, Types, Document } from "mongoose";
 
 export interface IQuestion {
 	title: string;
@@ -11,7 +11,8 @@ export interface IQuestion {
 	downvotes: number;
 }
 
-const QuestionSchema = new Schema(
+export interface IQuestionDocument extends IQuestion, Document {}
+const QuestionSchema = new Schema<IQuestion>(
 	{
 		title: { type: String, required: true },
 		content: { type: String, required: true },

@@ -1,4 +1,4 @@
-import { model, models, Schema, Types } from "mongoose";
+import { model, models, Schema, Types, Document } from "mongoose";
 
 export interface IVote {
 	author: Types.ObjectId;
@@ -7,7 +7,8 @@ export interface IVote {
 	voteType: "upvote" | "downvote";
 }
 
-const VoteSchema = new Schema(
+export interface IVoteDocument extends IVote, Document {}
+const VoteSchema = new Schema<IVote>(
 	{
 		author: { type: Schema.Types.ObjectId, ref: "User", required: true },
 		id: { type: Schema.Types.ObjectId, required: true },
