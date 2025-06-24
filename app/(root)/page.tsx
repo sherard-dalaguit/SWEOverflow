@@ -4,10 +4,12 @@ import ROUTES from "@/constants/routes";
 import LocalSearch from "@/components/search/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
 import QuestionCard from "@/components/cards/QuestionCard";
+import {handleError} from "@/lib/handlers/error";
+import {api} from "@/lib/api";
 
 const questions = [
   {
-    _id: 1,
+    _id: "1",
     title: "How to implement a search feature in JavaScript?",
     description: "I am trying to implement a search feature in my Next.js application. Any suggestions on how to do this effectively?",
     tags: [
@@ -21,7 +23,7 @@ const questions = [
     createdAt: new Date("2021-09-01")
   },
   {
-    _id: 2,
+    _id: "2",
     title: "What is the best way to handle state management in React?",
     description: "I am looking for the best practices for state management in React applications. Should I use Redux, Context API, or something else?",
     tags: [
@@ -35,7 +37,7 @@ const questions = [
     createdAt: new Date("2021-09-01")
   },
   {
-    _id: 3,
+    _id: "3",
     title: "How to optimize performance in a JavaScript application?",
     description: "I want to improve the performance of my Next.js app. What are some tips and tricks to achieve this?",
     tags: [
@@ -50,11 +52,22 @@ const questions = [
   },
 ]
 
+const test = async () => {
+  try {
+    return await api.users.getAll();
+  } catch(error) {
+    return handleError(error);
+  }
+}
+
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
+  const users = await test();
+  console.log("Users:", users);
+
   const { query = "", filter = "" } = await searchParams;
 
   const filteredQuestions = questions.filter((question) => {
