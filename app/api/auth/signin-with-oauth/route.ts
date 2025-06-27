@@ -7,6 +7,7 @@ import {ValidationError} from "@/lib/http-errors";
 import slugify from "slugify";
 import User from "@/database/user.model";
 import Account from "@/database/account.model";
+import {NextResponse} from "next/server";
 
 export async function POST(request: Request) {
 	const { provider, providerAccountId, user } = await request.json();
@@ -75,6 +76,8 @@ export async function POST(request: Request) {
 		}
 
 		await session.commitTransaction();
+
+		return NextResponse.json({ success: true })
 	} catch (error: unknown) {
 		await session.abortTransaction();
 		return handleError(error, "api") as APIErrorResponse;
