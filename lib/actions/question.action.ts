@@ -9,7 +9,7 @@ import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import TagQuestion, {ITagQuestion} from "@/database/tag-question.model";
 
-export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse> {
+export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<Question>> {
 	const validationResult = await action({
 		params,
 		schema: AskQuestionSchema,
