@@ -2,12 +2,14 @@
 
 import action from "@/lib/handlers/action";
 import {ActionResponse, ErrorResponse} from "@/types/global";
-import {SignUpSchema} from "@/lib/validations";
+import {SignInSchema, SignUpSchema} from "@/lib/validations";
 import handleError from "@/lib/handlers/error";
 import mongoose from "mongoose";
 import User from "@/database/user.model";
 import bcrypt from "bcryptjs";
 import Account from "@/database/account.model";
+import {NotFoundError} from "@/lib/http-errors";
+import {signIn} from "@/auth";
 
 export async function signUpWithCredentials(params: AuthCredentials): Promise<ActionResponse> {
 	const validationResult = await action({ params, schema: SignUpSchema });
@@ -56,6 +58,8 @@ export async function signUpWithCredentials(params: AuthCredentials): Promise<Ac
 
 		await session.commitTransaction();
 
+		await signIn("credentials", { email, password, redirect: false });
+
 		return { success: true };
 	} catch (error) {
 		await session.abortTransaction();
@@ -63,5 +67,38 @@ export async function signUpWithCredentials(params: AuthCredentials): Promise<Ac
 		return handleError(error) as ErrorResponse;
 	} finally {
 		await session.endSession();
+	}
+}
+
+export async function signInWithCredentials(params: Pick<AuthCredentials, 'email' | 'password'>): Promise<ActionResponse> {
+	const validationResult = await action({ params, schema: SignInSchema });
+
+	if (validationResult instanceof Error) {
+		return handleError(validationResult) as ErrorResponse;
+	}
+
+	const { email, password } = validationResult.params!;
+
+	try {
+		const existingUser = await User.findOne({ email });
+
+		if (!existingUser) throw new NotFoundError("User");
+
+		const existingAccount = await Account.findOne({
+			provider: 'credentials',
+			providerAccountId: email
+		});
+
+		if (!existingAccount) throw new NotFoundError("Account");
+
+		const passWordMatch = await bcrypt.compare(password, existingAccount.password!);
+
+		if (!passWordMatch) throw new Error("Password does not match");
+
+		await signIn("credentials", { email, password, redirect: false });
+
+		return { success: true };
+	} catch (error) {
+		return handleError(error) as ErrorResponse;
 	}
 }
