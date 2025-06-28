@@ -11,7 +11,7 @@ export interface IQuestion {
 	downvotes: number;
 }
 
-export interface IQuestionDocument extends IQuestion, Document {}
+export interface IQuestionDoc extends IQuestion, Document {}
 const QuestionSchema = new Schema<IQuestion>(
 	{
 		title: { type: String, required: true },
