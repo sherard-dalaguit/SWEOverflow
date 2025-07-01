@@ -19,7 +19,7 @@ interface Props<T> {
 			href: string;
 		};
 	},
-	render: (data: T) => React.ReactNode;
+	render: (data: T[]) => React.ReactNode;
 }
 
 interface StateSkeletonProps {
