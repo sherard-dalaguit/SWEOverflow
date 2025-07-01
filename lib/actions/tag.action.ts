@@ -45,6 +45,7 @@ export const getTags = async (
 			sortCriteria = { name: 1 };
 			break;
 		default:
+			sortCriteria = { questions: -1 };
 			break;
 	}
 
