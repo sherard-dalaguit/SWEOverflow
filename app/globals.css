@@ -284,7 +284,7 @@
 }
 
 @utility primary-text-gradient {
-  background: linear-gradient(129deg, #FF1493 0%, #FFC0CB 100%);
+  background: linear-gradient(129deg, #6e34eb 0%, #f700ff 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
