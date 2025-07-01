@@ -9,7 +9,7 @@ import Question, {IQuestionDoc} from "@/database/question.model";
 import Tag, {ITagDoc} from "@/database/tag.model";
 import TagQuestion, {ITagQuestion} from "@/database/tag-question.model";
 
-export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<Question>> {
+export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<typeof Question>> {
 	const validationResult = await action({
 		params,
 		schema: AskQuestionSchema,
@@ -169,7 +169,7 @@ export async function editQuestion(params: EditQuestionParams): Promise<ActionRe
   }
 }
 
-export async function getQuestion(params: GetQuestionParams): Promise<ActionResponse<Question>> {
+export async function getQuestion(params: GetQuestionParams): Promise<ActionResponse<typeof Question>> {
 	const validationResult = await action({
 		params,
 		schema: GetQuestionSchema,
@@ -200,7 +200,7 @@ export async function getQuestion(params: GetQuestionParams): Promise<ActionResp
 // 1. In Server Components: They act like regular async functions
 // 2. In Client Components: When used in form actions or event handlers, they are invoked via a POST request
 
-export async function getQuestions(params: PaginatedSearchParams): Promise<ActionResponse<{ questions: Question[], isNext: boolean }>> {
+export async function getQuestions(params: PaginatedSearchParams): Promise<ActionResponse<{ questions: typeof Question[], isNext: boolean }>> {
 	const validationResult = await action({
 		params,
 		schema: PaginatedSearchParamsSchema,
