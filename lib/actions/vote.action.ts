@@ -91,3 +91,43 @@ export async function createVote(params: CreateVoteParams): Promise<ActionRespon
 		return handleError(error) as ErrorResponse;
 	}
 }
+
+export async function hasVoted(params: HasVotedParams): Promise<ActionResponse<HasVotedResponse>> {
+	const validationResult = await action({
+		params,
+		schema: HasVotedSchema,
+		authorize: true
+	});
+
+	if (validationResult instanceof Error) {
+		return handleError(validationResult) as ErrorResponse;
+	}
+
+	const { targetId, targetType } = validationResult.params!;
+	const userId = validationResult.session?.user?.id;
+
+	try {
+		const vote = await Vote.findOne({
+			author: userId,
+			actionId: targetId,
+			actionType: targetType,
+		});
+
+		if (!vote) {
+			return {
+				success: false,
+				data: { hasUpvoted: false, hasDownvoted: false }
+			};
+		}
+
+		return {
+			success: true,
+			data: {
+				hasUpvoted: vote.voteType === 'upvote',
+				hasDownvoted: vote.voteType === 'downvote'
+			}
+		}
+	} catch (error) {
+		return handleError(error) as ErrorResponse;
+	}
+}
