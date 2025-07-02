@@ -12,6 +12,7 @@ import {after} from "next/server";
 import AnswerForm from "@/components/forms/AnswerForm";
 import {getAnswers} from "@/lib/actions/answer.action";
 import AllAnswers from "@/components/answers/AllAnswers";
+import Votes from "@/components/votes/Votes";
 
 
 const QuestionDetails = async ({ params }: RouteParams) => {
@@ -30,8 +31,6 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 		pageSize: 10,
 		filter: 'latest',
 	});
-
-	console.log("ANSWERS", answersResult)
 
 	const { author, createdAt, answers, views, tags, content, title } = question;
 
@@ -55,7 +54,12 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 					</div>
 
 					<div className="flex justify-end">
-						<p>Votes</p>
+						<Votes
+							upvotes={question.upvotes}
+							hasUpvoted={true}
+							downvotes={question.downvotes}
+							hasDownvoted={false}
+						/>
 					</div>
 				</div>
 
