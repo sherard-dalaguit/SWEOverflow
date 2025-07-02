@@ -20,14 +20,21 @@ import {MDXEditorMethods} from "@mdxeditor/editor";
 import {ReloadIcon} from "@radix-ui/react-icons";
 import {createAnswer} from "@/lib/actions/answer.action";
 import {toast} from "sonner";
+import {useSession} from "next-auth/react";
+import {api} from "@/lib/api";
 
-const Editor = dynamic(() => import('@/components/editor'), {
-  ssr: false
-})
+import Editor from "@/components/editor";
 
-const AnswerForm = ({ questionId }: { questionId: string }) => {
+interface Props {
+	questionId: string;
+	questionTitle: string;
+	questionContent: string;
+}
+
+const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
 	const [isAnswering, startAnsweringTransition] = useTransition();
 	const [isAISubmitting, setIsAISubmitting] = useState(false);
+	const session = useSession();
 
 	const editorRef = useRef<MDXEditorMethods>(null);
 
@@ -47,17 +54,75 @@ const AnswerForm = ({ questionId }: { questionId: string }) => {
 				form.reset();
 
 				toast.success("Success", { description: "Answer posted successfully!" } );
+
+				if (editorRef.current) {
+					editorRef.current.setMarkdown("");
+				}
 			} else {
 				toast.error("Error", { description: result.error?.message || "Failed to post answer." });
 			}
 		})
   };
 
+	const generateAIAnswer = async () => {
+		if (session.status !== "authenticated") {
+			toast.error("Error", { description: "You must be logged in to use this AI feature." });
+			return;
+		}
+
+		setIsAISubmitting(true);
+
+		try {
+			const { success, data, error } = await api.ai.getAnswer(questionTitle, questionContent)
+
+			if (!success) {
+				toast.error("Error", { description: error?.message });
+				return;
+			}
+
+			const formattedAnswer = data.replace(/<br>/g, " ").toString().trim();
+
+      const raw = data.toString();
+      let clean = raw
+				// convert HTML line breaks → newlines
+				.replace(/<br\s*\/?>/gi, "\n")
+				// strip all HTML tags
+				.replace(/<\/?[^>]+>/g, "")
+				// collapse any code-fence language hints into plain ```
+				.replace(/```[^\n]*\n/g, "```\n")
+				// nuke any JSON-looking object at the very top
+				.replace(/^\s*\{[\s\S]*?\}\s*/, "")
+				.trim();
+
+			if (editorRef.current) {
+				console.log("📋 clean MDX→", clean);
+				editorRef.current.setMarkdown(clean);
+				form.setValue("content", clean);
+				form.trigger("content");
+			}
+
+			toast.success("Success", { description: "AI answer generated successfully!" });
+			setIsAISubmitting(false);
+		} catch (error) {
+			toast.error(
+				"Error",
+				{ description: error instanceof Error
+						? error.message
+						: "Failed to generate AI answer."
+				}
+			);
+		}
+	}
+
 	return (
 		<div>
 			<div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
 				<h4 className="paragraph-semibold text-dark400_light800">Write your answer here</h4>
-				<Button className="btn light-border-2 gap-1.5 rounded-md border px-4 py-2.5 primary-gradient shadow-none" disabled={isAISubmitting}>
+				<Button
+					className="btn light-border-2 gap-1.5 rounded-md border px-4 py-2.5 primary-gradient shadow-none"
+					disabled={isAISubmitting}
+					onClick={generateAIAnswer}
+				>
 					{isAISubmitting ? (
 						<>
 							<ReloadIcon className="mr-2 size-4 animate-spin" />
@@ -88,7 +153,7 @@ const AnswerForm = ({ questionId }: { questionId: string }) => {
 								<FormControl>
 									<Editor
 										value={field.value}
-										editorRef={editorRef}
+										ref={editorRef}
 										fieldChange={field.onChange}
 									/>
 								</FormControl>
