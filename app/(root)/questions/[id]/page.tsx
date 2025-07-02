@@ -16,7 +16,6 @@ import Votes from "@/components/votes/Votes";
 import {hasVoted} from "@/lib/actions/vote.action";
 import {Suspense} from "react";
 
-
 const QuestionDetails = async ({ params }: RouteParams) => {
 	const { id } = await params;
 	const { success, data: question } = await getQuestion({ questionId: id });
