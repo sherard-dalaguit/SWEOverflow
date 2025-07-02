@@ -10,6 +10,7 @@ import {Answer, Question} from "@/database";
 import {revalidatePath} from "next/cache";
 import ROUTES from "@/constants/routes";
 import {CreateAnswerParams, GetAnswersParams} from "@/types/action";
+import {Answer as AnswerType} from "@/types/global";
 
 export async function createAnswer(
 	params: CreateAnswerParams,
@@ -61,7 +62,7 @@ export async function createAnswer(
 }
 
 export async function getAnswers(params: GetAnswersParams): Promise<ActionResponse<{
-	answers: Answer[],
+	answers: AnswerType[],
 	isNext: boolean,
 	totalAnswers: number,
 }>> {
