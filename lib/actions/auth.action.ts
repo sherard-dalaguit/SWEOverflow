@@ -10,6 +10,7 @@ import bcrypt from "bcryptjs";
 import Account from "@/database/account.model";
 import {NotFoundError} from "@/lib/http-errors";
 import {signIn} from "@/auth";
+import {AuthCredentials} from "@/types/action";
 
 export async function signUpWithCredentials(params: AuthCredentials): Promise<ActionResponse> {
 	const validationResult = await action({ params, schema: SignUpSchema });

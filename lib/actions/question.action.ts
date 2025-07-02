@@ -17,6 +17,7 @@ import Tag, {ITagDoc} from "@/database/tag.model";
 import TagQuestion, {ITagQuestion} from "@/database/tag-question.model";
 import {revalidatePath} from "next/cache";
 import ROUTES from "@/constants/routes";
+import {CreateQuestionParams, EditQuestionParams, GetQuestionParams, IncrementViewsParams} from "@/types/action";
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
 	const validationResult = await action({

@@ -6,6 +6,7 @@ import {FilterQuery} from "mongoose";
 import Tag from "@/database/tag.model";
 import type {Tag as TagType} from "@/types/global";
 import {Question} from "@/database";
+import {GetTagQuestionsParams} from "@/types/action";
 
 export const getTags = async (
 	params: PaginatedSearchParams
