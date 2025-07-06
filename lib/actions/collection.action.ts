@@ -152,7 +152,7 @@ export async function getSavedQuestions(params: PaginatedSearchParams): Promise<
 
 		const [totalCount] = await Collection.aggregate([
 			...pipeline,
-			{ $count: "total" }
+			{ $count: "count" }
 		]);
 
 		pipeline.push({ $sort: sortCriteria }, { $skip: skip }, { $limit: limit });
