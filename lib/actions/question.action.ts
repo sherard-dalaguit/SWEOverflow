@@ -18,6 +18,7 @@ import TagQuestion, {ITagQuestion} from "@/database/tag-question.model";
 import {revalidatePath} from "next/cache";
 import ROUTES from "@/constants/routes";
 import {CreateQuestionParams, EditQuestionParams, GetQuestionParams, IncrementViewsParams} from "@/types/action";
+import dbConnect from "@/lib/mongoose";
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
 	const validationResult = await action({
@@ -299,6 +300,20 @@ export async function incrementViews(params: IncrementViewsParams): Promise<Acti
 		await question.save();
 
 		return { success: true, data: { views: question.views } };
+	} catch (error) {
+		return handleError(error) as ErrorResponse;
+	}
+}
+
+export async function getHotQuestions(): Promise<ActionResponse<QuestionType[]>> {
+	try {
+		await dbConnect();
+
+		const questions = await Question.find()
+			.sort({ views: -1, upvotes: -1 })
+			.limit(5);
+
+		return { success: true, data: JSON.parse(JSON.stringify(questions)) };
 	} catch (error) {
 		return handleError(error) as ErrorResponse;
 	}
