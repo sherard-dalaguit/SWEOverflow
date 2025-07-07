@@ -7,18 +7,19 @@ import {EMPTY_TAGS} from "@/constants/states";
 import TagCard from "@/components/cards/TagCard";
 import {TagFilters} from "@/constants/filters";
 import CommonFilter from "@/components/filters/CommonFilter";
+import Pagination from "@/components/Pagination";
 
 const Tags = async ({ searchParams }: RouteParams) => {
 	const { page, pageSize, query, filter } = await searchParams;
 
 	const { success, data, error } = await getTags({
 		page: Number(page) || 1,
-		pageSize: Number(pageSize) || 10,
+		pageSize: Number(pageSize) || 6,
 		query,
 		filter,
 	})
 
-	const { tags } = data || {};
+	const { tags, isNext } = data || {};
 
 	return (
 		<>
@@ -49,6 +50,8 @@ const Tags = async ({ searchParams }: RouteParams) => {
 					</div>
 				)}
 			/>
+
+			<Pagination page={page} isNext={isNext || false} />
 		</>
 	)
 }
