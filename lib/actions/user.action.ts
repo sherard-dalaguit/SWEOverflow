@@ -72,7 +72,7 @@ export async function getUsers(params: PaginatedSearchParams): Promise<ActionRes
 }
 
 export async function getUser(params: GetUserParams): Promise<ActionResponse<{
-	user: typeof User,
+	user: UserType,
 	totalQuestions: number, totalAnswers:
 		number
 }>> {
