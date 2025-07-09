@@ -4,16 +4,18 @@ import Link from "next/link";
 import TagCard from "@/components/cards/TagCard";
 import Metric from "@/components/Metric";
 import {Question, Tag} from "@/types/global";
+import EditDeleteAction from "@/components/user/EditDeleteAction";
 
 interface Props {
 	question: Question;
+	showActionBtns?: boolean;
 }
 
-const QuestionCard = ({ question: { _id, title, tags, author, createdAt, upvotes, answers, views } }: Props) => {
+const QuestionCard = ({ question: { _id, title, tags, author, createdAt, upvotes, answers, views }, showActionBtns = false }: Props) => {
 	return (
 		<div className="card-wrapper rounded-[10px] p-9 sm:px-11">
-			<div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
-				<div>
+			<div className="flex flex-col-reverse items-center justify-between gap-5 sm:flex-row">
+				<div className="flex-1">
 					<span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
 						{getTimeStamp(createdAt)}
 					</span>
@@ -24,6 +26,8 @@ const QuestionCard = ({ question: { _id, title, tags, author, createdAt, upvotes
 						</h3>
 					</Link>
 				</div>
+
+				{showActionBtns && <EditDeleteAction type="Question" itemId={_id} />}
 			</div>
 
 			<div className="mt-3.5 flex w-full flex-wrap gap-2">
