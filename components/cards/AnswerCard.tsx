@@ -40,7 +40,7 @@ const AnswerCard = ({
 
       {showActionBtns && (
         <div className="background-light800 flex-center absolute -right-2 -top-2 size-9 rounded-full">
-          <EditDeleteAction type="answer" itemId={_id} />
+          <EditDeleteAction type="Answer" itemId={_id} />
         </div>
       )}
 
