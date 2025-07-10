@@ -13,6 +13,8 @@ import {CreateAnswerParams, DeleteAnswerParams, GetAnswersParams} from "@/types/
 import {Answer as AnswerType} from "@/types/global";
 import TagQuestion from "../../database/tag-question.model";
 import Tag from "../../database/tag.model";
+import {after} from "next/server";
+import {createInteraction} from "@/lib/actions/interaction.action";
 
 export async function createAnswer(
 	params: CreateAnswerParams,
@@ -49,6 +51,15 @@ export async function createAnswer(
 
 		question.answers += 1;
 		await question.save({ session });
+
+		after(async () => {
+			await createInteraction({
+				action: 'post',
+				actionTarget: 'answer',
+				actionId: newAnswer._id.toString(),
+				authorId: userId as string,
+			})
+		})
 
 		await session.commitTransaction();
 
