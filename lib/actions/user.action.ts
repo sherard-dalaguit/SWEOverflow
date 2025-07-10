@@ -1,6 +1,14 @@
 "use server";
 
-import {ActionResponse, ErrorResponse, PaginatedSearchParams, User as UserType, Question as QuestionType, Answer as AnswerType} from "@/types/global";
+import {
+	ActionResponse,
+	ErrorResponse,
+	PaginatedSearchParams,
+	User as UserType,
+	Question as QuestionType,
+	Answer as AnswerType,
+	Badges
+} from "@/types/global";
 import action from "@/lib/handlers/action";
 import {
 	GetUserAnswersSchema,
@@ -12,6 +20,7 @@ import handleError from "@/lib/handlers/error";
 import {FilterQuery, PipelineStage, Types} from "mongoose";
 import {Answer, Question, User} from "@/database";
 import {GetUserAnswersParams, GetUserParams, GetUserQuestionsParams, GetUserTagsParams} from "@/types/action";
+import {assignBadges} from "@/lib/utils";
 
 export async function getUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
 	const validationResult = await action({
@@ -246,4 +255,71 @@ export async function getUserTopTags(params: GetUserTagsParams): Promise<ActionR
 	} catch (error) {
 		return handleError(error) as ErrorResponse;
 	}
+}
+
+export async function getUserStats(params: GetUserParams): Promise<
+  ActionResponse<{
+    totalQuestions: number;
+    totalAnswers: number;
+    badges: Badges;
+  }>
+> {
+  const validationResult = await action({
+    params,
+    schema: GetUserSchema,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { userId } = params;
+
+  try {
+    const [questionStats] = await Question.aggregate([
+      { $match: { author: new Types.ObjectId(userId) } },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+          upvotes: { $sum: "$upvotes" },
+          views: { $sum: "$views" },
+        },
+      },
+    ]);
+
+    const [answerStats] = await Answer.aggregate([
+      { $match: { author: new Types.ObjectId(userId) } },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+          upvotes: { $sum: "$upvotes" },
+        },
+      },
+    ]);
+
+    const badges = assignBadges({
+      criteria: [
+        { type: "ANSWER_COUNT", count: answerStats.count },
+        { type: "QUESTION_COUNT", count: questionStats.count },
+        {
+          type: "QUESTION_UPVOTES",
+          count: questionStats.upvotes + answerStats.upvotes,
+        },
+        { type: "TOTAL_VIEWS", count: questionStats.views },
+      ],
+    });
+
+    return {
+      success: true,
+      data: {
+        totalQuestions: questionStats.count,
+        totalAnswers: answerStats.count,
+        badges,
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
 }

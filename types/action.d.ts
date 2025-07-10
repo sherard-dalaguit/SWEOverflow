@@ -93,3 +93,24 @@ interface DeleteQuestionParams {
 interface DeleteAnswerParams {
 	answerId: string;
 }
+
+interface CreateInteractionParams {
+	action: 'view' | 'upvote' | 'downvote' | 'bookmark' | 'post' | 'edit' | 'delete' | 'search';
+	actionTarget: 'question' | 'answer';
+	actionId: string;
+	authorId: string;
+}
+
+interface UpdateReputationParams {
+	interaction: IInteractionDoc;
+	session: mongoose.ClientSession;
+	performerId: string;
+	authorId: string;
+}
+
+interface RecommendationParams {
+	userId: string;
+	query?: string;
+	skip: number;
+	limit: number;
+}
