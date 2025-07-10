@@ -8,6 +8,12 @@ import TagCard from "@/components/cards/TagCard";
 import {TagFilters} from "@/constants/filters";
 import CommonFilter from "@/components/filters/CommonFilter";
 import Pagination from "@/components/Pagination";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: 'Tags | SWEOverflow',
+  description: 'Explore a variety of tags on SWEOverflow, the platform for software engineering discussions.',
+}
 
 const Tags = async ({ searchParams }: RouteParams) => {
 	const { page, pageSize, query, filter } = await searchParams;

@@ -10,6 +10,12 @@ import {EMPTY_QUESTION} from "@/constants/states";
 import {HomePageFilters} from "@/constants/filters";
 import CommonFilter from "@/components/filters/CommonFilter";
 import Pagination from "@/components/Pagination";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: 'Home | SWEOverflow',
+  description: 'A platform for software engineers to ask questions, share knowledge, and connect with peers.',
+}
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;

@@ -22,6 +22,12 @@ import {
   getUserTopTags,
 } from "@/lib/actions/user.action";
 import {RouteParams} from "@/types/global";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: 'Profile | SWEOverflow',
+  description: 'View user profile, stats, and posts on SWEOverflow',
+}
 
 const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;

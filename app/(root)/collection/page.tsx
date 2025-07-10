@@ -7,6 +7,12 @@ import {getSavedQuestions} from "@/lib/actions/collection.action";
 import CommonFilter from "@/components/filters/CommonFilter";
 import {CollectionFilters} from "@/constants/filters";
 import Pagination from "@/components/Pagination";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: 'Collections | SWEOverflow',
+  description: 'Explore saved questions and collections on SWEOverflow',
+}
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;

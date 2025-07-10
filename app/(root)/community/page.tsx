@@ -8,6 +8,12 @@ import UserCard from "@/components/cards/UserCard";
 import {UserFilters} from "@/constants/filters";
 import CommonFilter from "@/components/filters/CommonFilter";
 import Pagination from "@/components/Pagination";
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+  title: 'Community | SWEOverflow',
+  description: 'Explore the SWEOverflow community, connect with users, and discover insights from fellow software engineers.',
+}
 
 const Community = async ({ searchParams }: RouteParams) => {
 	const { page, pageSize, query, filter } = await searchParams;
