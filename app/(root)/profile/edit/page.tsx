@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import ProfileForm from "@/components/forms/ProfileForm";
 import ROUTES from "@/constants/routes";
 import { getUser } from "@/lib/actions/user.action";
+import {User} from "@/types/global";
 
 const Page = async () => {
   const session = await auth();
