@@ -8,6 +8,8 @@ import CommonFilter from "@/components/filters/CommonFilter";
 import {CollectionFilters} from "@/constants/filters";
 import Pagination from "@/components/Pagination";
 import {Metadata} from "next";
+import {auth} from "@/auth";
+import {redirect} from "next/navigation";
 
 export const metadata: Metadata = {
   title: 'Collections | SWEOverflow',
@@ -19,6 +21,9 @@ interface SearchParams {
 }
 
 const Collections = async ({ searchParams }: SearchParams) => {
+  const session = await auth();
+  if (!session?.user?.id) redirect(ROUTES.SIGN_IN);
+
   const { page, pageSize, query, filter } = await searchParams;
 
   const { success, data, error } = await getSavedQuestions({
