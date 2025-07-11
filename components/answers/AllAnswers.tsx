@@ -33,16 +33,7 @@ const AllAnswers = ({ page, isNext, data, success, error, totalAnswers }: Props)
         success={success}
         empty={EMPTY_ANSWERS}
         render={(answers) =>
-          answers.map((answer) =>
-            <AnswerCard
-              key={answer._id}
-              _id={answer._id}
-              author={answer.author}
-              content={answer.content}
-              createdAt={answer.createdAt}
-              upvotes={answer.upvotes}
-              downvotes={answer.downvotes}
-          />)
+          answers.map((answer) => <AnswerCard key={answer._id} {...answer} /> )
         }
       />
 
